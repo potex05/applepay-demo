@@ -5,280 +5,227 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Apple Pay Demo</title>
 <style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        box-sizing: border-box;
-    }
-    .container {
-        text-align: center;
-        background: white;
-        padding: 20px 30px;
-        border-radius: 20px;
-        max-width: 400px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    h1 {
-        font-size: 22px;
-        margin-top: 0;
-        margin-bottom: 5px;
-        color: #1d1d1f;
-    }
-    .warning-text {
-        font-size: 12px;
-        color: #ff3b30;
-        margin-bottom: 25px;
-    }
-    /* 商品情報風UIのスタイル */
-    .product-info {
-        background: #f9f9fb;
-        border-radius: 12px;
-        padding: 0 20px;
-        margin-bottom: 25px;
-    }
-    .product-image {
-        height: 170px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    .product-name {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1d1d1f;
-        padding-bottom: 10px;
-    }
-    #Image{
-        height: 200px;
-    }
-    /* フォーム周りのスタイル */
-    .checkout-form {
-        margin-bottom: 30px;
-        text-align: left;
-    }
-    .input-label {
-        display: block;
-        font-size: 13px;
-        color: #86868b;
-        margin-bottom: 8px;
-        font-weight: 500;
-    }
-    .text-input, .amount-input {
-        box-sizing: border-box;
-        width: 100%;
-        font-size: 18px;
-        border: 1px solid #d2d2d7;
-        border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 20px;
-        outline: none;
-        color: #1d1d1f;
-    }
-    .text-input:focus, .amount-input:focus {
-        border-color: #0071e3;
-    }
-    /* 金額入力エリアの特殊スタイル */
-    .amount-wrapper {
-        display: flex;
-        align-items: center;
-        border: 1px solid #d2d2d7;
-        border-radius: 8px;
-        padding-left: 15px;
-        margin-bottom: 20px;
-        transition: border-color 0.2s;
-    }
-    .amount-wrapper:focus-within {
-        border-color: #0071e3;
-    }
-    .amount-wrapper span {
-        font-size: 20px;
-        font-weight: bold;
-        color: #1d1d1f;
-    }
-    .amount-wrapper .amount-input {
-        border: none;
-        margin-bottom: 0;
-        padding-left: 10px;
-        font-size: 24px;
-        font-weight: bold;
-    }
-    /* Apple Pay公式スタイルのボタン */
-    .apple-pay-button {
-        -webkit-appearance: -apple-pay-button;
-        -apple-pay-button-type: check-out;
-        -apple-pay-button-style: black;
-        -apple-pay-button-box-sizing: border-box; 
-        display: inline-block;
-        width: 100%;
-        height: 45px;
-        border-radius: 8px;
-        cursor: pointer; 
-        box-sizing: border-box;
-    }
-    .status {
-        margin-top: 20px;
-        font-size: 14px;
-        color: #86868b;
-        min-height: 20px;
-        line-height: 1.5;
-        text-align: left;
-    }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        text-align: center;
+        background: white;
+        padding: 20px 30px;
+        border-radius: 20px;
+        max-width: 400px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    h1 {
+        font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 5px;
+        color: #1d1d1f;
+    }
+    .warning-text {
+        font-size: 12px;
+        color: #ff3b30;
+        margin-bottom: 25px;
+    }
+    /* 商品情報風UIのスタイル */
+    .product-info {
+        background: #f9f9fb;
+        border-radius: 12px;
+        padding: 0 20px;
+        margin-bottom: 25px;
+    }
+    .product-image {
+        height: 170px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .product-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1d1d1f;
+        padding-bottom: 10px;
+    }
+    #Image{
+        height: 200px;
+    }
+    /* フォーム周りのスタイル */
+    .checkout-form {
+        margin-bottom: 30px;
+        text-align: left;
+    }
+    .input-label {
+        display: block;
+        font-size: 13px;
+        color: #86868b;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .text-input, .amount-input {
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 18px;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 20px;
+        outline: none;
+        color: #1d1d1f;
+    }
+    .text-input:focus, .amount-input:focus {
+        border-color: #0071e3;
+    }
+    /* 金額入力エリアの特殊スタイル */
+    .amount-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        padding-left: 15px;
+        margin-bottom: 20px;
+        transition: border-color 0.2s;
+    }
+    .amount-wrapper:focus-within {
+        border-color: #0071e3;
+    }
+    .amount-wrapper span {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1d1d1f;
+    }
+    .amount-wrapper .amount-input {
+        border: none;
+        margin-bottom: 0;
+        padding-left: 10px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    /* Apple Pay公式スタイルのボタン */
+    .apple-pay-button {
+        -webkit-appearance: -apple-pay-button;
+        -apple-pay-button-type: check-out;
+        -apple-pay-button-style: black;
+        -apple-pay-button-box-sizing: border-box; 
+        display: inline-block;
+        width: 100%;
+        height: 45px;
+        border-radius: 8px;
+        cursor: pointer; 
+        box-sizing: border-box;
+    }
+    .status {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #86868b;
+        min-height: 20px;
+        line-height: 1.5;
+        text-align: left;
+    }
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>注文確認</h1>
+    <h1>注文確認</h1>
 
-    <!-- 商品情報セクション -->
-    <div class="product-info">
-        <div class="product-image">
-            <svg id="Image" data-slot="icon" fill="none" stroke-width="1.1" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
-            </svg>
-        </div>
-        <div class="product-name">商品その1</div>
-    </div>
+    <!-- 商品情報セクション -->
+    <div class="product-info">
+        <div class="product-image">
+            <svg id="Image" data-slot="icon" fill="none" stroke-width="1.1" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+            </svg>
+        </div>
+        <div class="product-name">商品その1</div>
+    </div>
 
-    <!-- 決済情報入力セクション -->
-    <div class="checkout-form">
-        <label class="input-label" for="shop-name">支払先</label>
-        <input type="text" id="shop-name" class="text-input" value="オンラインショップ">
-        
-        <label class="input-label" for="amount">支払金額</label>
-        <div class="amount-wrapper">
-            <span>¥</span>
-            <input type="number" id="amount" class="amount-input" value="1000" min="1">
-        </div>
-    </div>
+    <!-- 決済情報入力セクション -->
+    <div class="checkout-form">
+        <label class="input-label" for="shop-name">支払先</label>
+        <input type="text" id="shop-name" class="text-input" value="オンラインショップ">
+        
+        <label class="input-label" for="amount">支払金額</label>
+        <div class="amount-wrapper">
+            <span>¥</span>
+            <input type="number" id="amount" class="amount-input" value="1000" min="1">
+        </div>
+    </div>
 
-    <!-- Apple Pay ボタン -->
-    <div id="apple-pay-container">
-        <button class="apple-pay-button" onclick="onApplePayButtonClicked()"></button>
-    </div>
-    <div id="status" class="status">内容をご確認の上、ボタンを押してください</div>
+    <!-- Apple Pay ボタン -->
+    <div id="apple-pay-container">
+        <button class="apple-pay-button" onclick="onApplePayButtonClicked()"></button>
+    </div>
+    <div id="status" class="status">内容をご確認の上、ボタンを押してください</div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. HTTP接続チェック
-    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
-        document.getElementById('status').innerText = "エラー: Apple PayのテストにはHTTPS接続が必要です。";
-        document.getElementById('apple-pay-container').style.display = 'none';
-        return;
-    }
+    // 1. HTTP接続チェック
+    if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+        document.getElementById('status').innerText = "エラー: Apple PayのテストにはHTTPS接続が必要です。";
+        document.getElementById('apple-pay-container').style.display = 'none';
+        return;
+    }
 
-    // 2. ApplePaySessionに対応しているか確認
-    if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
-        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、ご利用可能なお支払方法が登録されていません。";
-        document.getElementById('apple-pay-container').style.display = 'none';
-    }
+    // 2. ApplePaySessionに対応しているか確認
+    if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
+        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、ご利用可能なお支払方法が登録されていません。";
+        document.getElementById('apple-pay-container').style.display = 'none';
+    }
 });
 
 async function onApplePayButtonClicked() {
-    const statusDiv = document.getElementById('status');
-    const amountVal = document.getElementById('amount').value;
-    const shopNameVal = document.getElementById('shop-name').value || '未設定';
+    const statusDiv = document.getElementById('status');
+    const amountVal = document.getElementById('amount').value;
+    const shopNameVal = document.getElementById('shop-name').value || '未設定';
 
-    if (!amountVal || amountVal <= 0) {
-        statusDiv.innerText = "有効な金額を入力してください。";
-        return;
-    }
+    if (!amountVal || amountVal <= 0) {
+        statusDiv.innerText = "有効な金額を入力してください。";
+        return;
+    }
 
-    statusDiv.innerText = "Apple Payを起動中...";
+    statusDiv.innerText = "Apple Payを起動中...";
 
-    // 商品金額（数値に変換）
-    const baseAmount = Number(amountVal);
+    // ApplePaySession を使用したリクエストを作成
+    const paymentRequest = {
+        countryCode: 'JP',
+        currencyCode: 'JPY',
+        supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
+        merchantCapabilities: ['supports3DS'],
+        total: {
+            label: shopNameVal, // 入力された店舗名をセット
+            amount: amountVal
+        }
+    };
 
-    // ApplePaySession を使用したリクエストを作成
-    const paymentRequest = {
-        countryCode: 'JP',
-        currencyCode: 'JPY',
-        supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
-        merchantCapabilities: ['supports3DS'],
-        // 配送方法の選択肢を設定（初期状態は1番目が選択される）
-        shippingMethods: [
-            {
-                label: '通常配送',
-                detail: '3〜5日でお届け',
-                amount: '0',
-                identifier: 'normal'
-            },
-            {
-                label: 'お急ぎ便',
-                detail: '翌日お届け',
-                amount: '500',
-                identifier: 'express'
-            }
-        ],
-        // 明細一覧（初期値は通常配送: 0円）
-        lineItems: [
-            { label: '商品小計', amount: baseAmount.toString(), type: 'final' },
-            { label: '配送料 (通常配送)', amount: '0', type: 'final' }
-        ],
-        total: {
-            label: shopNameVal, // 入力された店舗名をセット
-            amount: baseAmount.toString(),
-            type: 'final'
-        }
-    };
+    // バージョン3を指定してセッション開始
+    const session = new ApplePaySession(3, paymentRequest);
 
-    // バージョン3を指定してセッション開始
-    const session = new ApplePaySession(3, paymentRequest);
+    // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
+    session.onvalidatemerchant = async (event) => {
+        console.log("Validation URL:", event.validationURL);
+        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...\n※フロントエンド単体のためここで停止します。";
+    };
 
-    // 配送方法変更時の処理を追加
-    session.onshippingmethodselected = (event) => {
-        const selectedMethod = event.shippingMethod;
-        let shippingCost = 0;
+    // ユーザー認証成功時
+    session.onpaymentauthorized = (event) => {
+        // 決済処理結果を返す
+        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+        statusDiv.innerHTML = `<span style="color: #34c759; font-weight: bold;">決済デモ成功！</span><br>店舗名: ${shopNameVal}<br>金額:¥${Number(amountVal).toLocaleString()}`;
+    };
 
-        if (selectedMethod.identifier === 'express') {
-            shippingCost = 500;
-        } else {
-            shippingCost = 0;
-        }
+    // キャンセル時
+    session.oncancel = (event) => {
+        statusDiv.innerText = "ユーザーによって決済がキャンセルされました。";
+    };
 
-        const newTotalAmount = baseAmount + shippingCost;
-
-        // Apple Pay 決済シートの金額情報を再計算して更新
-        const update = {
-            newTotal: {
-                label: shopNameVal,
-                amount: newTotalAmount.toString(),
-                type: 'final'
-            },
-            newLineItems: [
-                { label: '商品小計', amount: baseAmount.toString(), type: 'final' },
-                { label: `配送料 (${selectedMethod.label})`, amount: shippingCost.toString(), type: 'final' }
-            ]
-        };
-
-        session.completeShippingMethodSelection(update);
-    };
-
-    // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
-    session.onvalidatemerchant = async (event) => {
-        console.log("Validation URL:", event.validationURL);
-        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...\n※フロントエンド単体のためここで停止します。";
-    };
-
-    // ユーザー認証成功時
-    session.onpaymentauthorized = (event) => {
-        // 決済処理結果を返す
-        session.completePayment(ApplePaySession.STATUS_SUCCESS);
-        statusDiv.innerHTML = `<span style="color: #34c759; font-weight: bold;">決済デモ成功！</span><br>店舗名: ${shopNameVal}<br>金額:¥${Number(amountVal).toLocaleString()}`;
-    };
-
-    // キャンセル時
-    session.oncancel = (event) => {
-        statusDiv.innerText = "ユーザーによって決済がキャンセルされました。";
-    };
-
-    // セッション開始
-    session.begin();
+    // セッション開始
+    session.begin();
 }
 </script>
 </body>
