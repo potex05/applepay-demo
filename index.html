@@ -238,6 +238,29 @@ async function onApplePayButtonClicked() {
     // バージョン3を指定してセッション開始
     const session = new ApplePaySession(3, paymentRequest);
 
+    // 配送先決定・変更時のイベントハンドラ（送料・内訳を確定させるために必須）
+    session.onshippingcontactselected = (event) => {
+        const baseAmount = Number(amountVal);
+        const update = {
+            newTotal: {
+                label: shopNameVal,
+                amount: baseAmount.toString()
+            },
+            newLineItems: [
+                {
+                    label: '商品小計',
+                    amount: baseAmount.toString()
+                },
+                {
+                    label: '送料',
+                    amount: '0'
+                }
+            ],
+            newShippingMethods: paymentRequest.shippingMethods
+        };
+        session.completeShippingContactSelection(update);
+    };
+
     // 配送方法変更時のイベントハンドラ
     session.onshippingmethodselected = (event) => {
         const selectedMethod = event.shippingMethod;
@@ -246,6 +269,7 @@ async function onApplePayButtonClicked() {
         const totalAmount = baseAmount + shippingCost;
 
         const update = {
+            status: ApplePaySession.STATUS_SUCCESS,
             newTotal: {
                 label: shopNameVal,
                 amount: totalAmount.toString()
@@ -258,34 +282,6 @@ async function onApplePayButtonClicked() {
                 {
                     label: '送料',
                     amount: shippingCost.toString()
-                }
-            ],
-            total: {
-                label: shopNameVal,
-                amount: totalAmount.toString()
-            },
-            lineItems: [
-                {
-                    label: '商品小計',
-                    amount: baseAmount.toString()
-                },
-                {
-                    label: '送料',
-                    amount: shippingCost.toString()
-                }
-            ],
-            newShippingMethods: [
-                {
-                    label: '通常配送',
-                    detail: '3〜5日以内にお届け',
-                    amount: '0',
-                    identifier: 'standard'
-                },
-                {
-                    label: '速達配送',
-                    detail: '翌日お届け',
-                    amount: '500',
-                    identifier: 'express'
                 }
             ]
         };
