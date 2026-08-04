@@ -191,6 +191,21 @@ async function onApplePayButtonClicked() {
 
     statusDiv.innerText = "Apple Payを起動中...";
 
+    const shippingMethods = [
+        {
+            label: '通常配送',
+            detail: '3〜5日以内にお届け',
+            amount: '0',
+            identifier: 'standard'
+        },
+        {
+            label: '速達配送',
+            detail: '翌日お届け',
+            amount: '500',
+            identifier: 'express'
+        }
+    ];
+
     // ApplePaySession を使用したリクエストを作成
     const paymentRequest = {
         countryCode: 'JP',
@@ -203,26 +218,12 @@ async function onApplePayButtonClicked() {
         requiredBillingContactFields: ['postalAddress', 'name'],
 
         // --- 2. 配送方法の選択肢 ---
-        shippingMethods: [
-            {
-                label: '通常配送',
-                detail: '3〜5日以内にお届け',
-                amount: '0',
-                identifier: 'standard',
-                selected: true
-            },
-            {
-                label: '速達配送',
-                detail: '翌日お届け',
-                amount: '500',
-                identifier: 'express'
-            }
-        ],
+        shippingMethods: shippingMethods,
 
         // --- 3. 金額の内訳（小計・送料・合計） ---
         total: {
             label: shopNameVal,
-            amount: amountVal,
+            amount: (Number(amountVal) + Number(shippingMethods[0].amount)).toString(),
             type: 'final'
         },
         lineItems: [
@@ -233,7 +234,7 @@ async function onApplePayButtonClicked() {
             },
             {
                 label: '送料',
-                amount: '0',
+                amount: shippingMethods[0].amount,
                 type: 'final'
             }
         ]
@@ -249,7 +250,7 @@ async function onApplePayButtonClicked() {
         const shippingCost = Number(selectedMethod.amount);
         const totalAmount = baseAmount + shippingCost;
 
-        // 選択された配送方法の selected 状態を更新
+        // 選択された配送方法に selected フラグを明示的に指定
         const updatedShippingMethods = paymentRequest.shippingMethods.map(method => ({
             ...method,
             selected: method.identifier === selectedMethod.identifier
@@ -279,12 +280,10 @@ async function onApplePayButtonClicked() {
         session.completeShippingMethodSelection(update);
     };
 
-    // マーチャント認証イベント（デモ用にダミー完了処理を実行）
+    // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
     session.onvalidatemerchant = async (event) => {
         console.log("Validation URL:", event.validationURL);
-        statusDiv.innerText = "マーチャント認証（デモパス中）...";
-        // 本来はサーバーから取得した merchantSession オブジェクトを渡します
-        session.completeMerchantValidation({});
+        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...\n※フロントエンド単体のためここで停止します。";
     };
 
     // ユーザー認証成功時
