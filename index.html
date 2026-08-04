@@ -191,20 +191,73 @@ async function onApplePayButtonClicked() {
 
     statusDiv.innerText = "Apple Payを起動中...";
 
+    // 商品金額（数値に変換）
+    const baseAmount = Number(amountVal);
+
     // ApplePaySession を使用したリクエストを作成
     const paymentRequest = {
         countryCode: 'JP',
         currencyCode: 'JPY',
         supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
         merchantCapabilities: ['supports3DS'],
+        // 配送方法の選択肢を設定（初期状態は1番目が選択される）
+        shippingMethods: [
+            {
+                label: '通常配送',
+                detail: '3〜5日でお届け',
+                amount: '0',
+                identifier: 'normal'
+            },
+            {
+                label: 'お急ぎ便',
+                detail: '翌日お届け',
+                amount: '500',
+                identifier: 'express'
+            }
+        ],
+        // 明細一覧（初期値は通常配送: 0円）
+        lineItems: [
+            { label: '商品小計', amount: baseAmount.toString(), type: 'final' },
+            { label: '配送料 (通常配送)', amount: '0', type: 'final' }
+        ],
         total: {
             label: shopNameVal, // 入力された店舗名をセット
-            amount: amountVal
+            amount: baseAmount.toString(),
+            type: 'final'
         }
     };
 
     // バージョン3を指定してセッション開始
     const session = new ApplePaySession(3, paymentRequest);
+
+    // 配送方法変更時の処理を追加
+    session.onshippingmethodselected = (event) => {
+        const selectedMethod = event.shippingMethod;
+        let shippingCost = 0;
+
+        if (selectedMethod.identifier === 'express') {
+            shippingCost = 500;
+        } else {
+            shippingCost = 0;
+        }
+
+        const newTotalAmount = baseAmount + shippingCost;
+
+        // Apple Pay 決済シートの金額情報を再計算して更新
+        const update = {
+            newTotal: {
+                label: shopNameVal,
+                amount: newTotalAmount.toString(),
+                type: 'final'
+            },
+            newLineItems: [
+                { label: '商品小計', amount: baseAmount.toString(), type: 'final' },
+                { label: `配送料 (${selectedMethod.label})`, amount: shippingCost.toString(), type: 'final' }
+            ]
+        };
+
+        session.completeShippingMethodSelection(update);
+    };
 
     // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
     session.onvalidatemerchant = async (event) => {
