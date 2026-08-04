@@ -221,16 +221,19 @@ async function onApplePayButtonClicked() {
         // --- 3. 金額の内訳（小計・送料・合計など） ---
         total: {
             label: shopNameVal,
-            amount: amountVal
+            amount: amountVal,
+            type: 'final'
         },
         lineItems: [
             {
                 label: '商品小計',
-                amount: amountVal
+                amount: amountVal,
+                type: 'final'
             },
             {
                 label: '送料',
-                amount: '0'
+                amount: '0',
+                type: 'final'
             }
         ]
     };
@@ -238,50 +241,29 @@ async function onApplePayButtonClicked() {
     // バージョン3を指定してセッション開始
     const session = new ApplePaySession(3, paymentRequest);
 
-    // 配送先決定・変更時のイベントハンドラ（送料・内訳を確定させるために必須）
-    session.onshippingcontactselected = (event) => {
-        const baseAmount = Number(amountVal);
-        const update = {
-            newTotal: {
-                label: shopNameVal,
-                amount: baseAmount.toString()
-            },
-            newLineItems: [
-                {
-                    label: '商品小計',
-                    amount: baseAmount.toString()
-                },
-                {
-                    label: '送料',
-                    amount: '0'
-                }
-            ],
-            newShippingMethods: paymentRequest.shippingMethods
-        };
-        session.completeShippingContactSelection(update);
-    };
-
     // 配送方法変更時のイベントハンドラ
     session.onshippingmethodselected = (event) => {
         const selectedMethod = event.shippingMethod;
-        const baseAmount = Number(amountVal);
-        const shippingCost = selectedMethod.identifier === 'express' ? 500 : 0;
+        const baseAmount = parseFloat(amountVal);
+        const shippingCost = parseFloat(selectedMethod.amount);
         const totalAmount = baseAmount + shippingCost;
 
         const update = {
-            status: ApplePaySession.STATUS_SUCCESS,
             newTotal: {
                 label: shopNameVal,
-                amount: totalAmount.toString()
+                amount: totalAmount.toFixed(0),
+                type: 'final'
             },
             newLineItems: [
                 {
                     label: '商品小計',
-                    amount: baseAmount.toString()
+                    amount: baseAmount.toFixed(0),
+                    type: 'final'
                 },
                 {
                     label: '送料',
-                    amount: shippingCost.toString()
+                    amount: shippingCost.toFixed(0),
+                    type: 'final'
                 }
             ]
         };
