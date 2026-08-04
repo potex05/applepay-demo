@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function onApplePayButtonClicked() {
     const statusDiv = document.getElementById('status');
     const amountVal = document.getElementById('amount').value;
-    const shopNameVal = document.getElementById('shop-name').value || '未設定ショップ';
+    const shopNameVal = document.getElementById('shop-name').value || '未設定';
 
     if (!amountVal || amountVal <= 0) {
         statusDiv.innerText = "有効な金額を入力してください。";
