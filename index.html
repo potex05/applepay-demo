@@ -197,10 +197,42 @@ async function onApplePayButtonClicked() {
         currencyCode: 'JPY',
         supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
         merchantCapabilities: ['supports3DS'],
+        
+        // --- 1. ユーザーに要求する情報（画面項目が増えます） ---
+        requiredShippingContactFields: ['postalAddress', 'name', 'phone', 'email'],
+        requiredBillingContactFields: ['postalAddress', 'name'],
+
+        // --- 2. 配送方法の選択肢を追加 ---
+        shippingMethods: [
+            {
+                label: '通常配送（ヤマト宅急便）',
+                detail: '3〜5日以内にお届け',
+                amount: '0',
+                identifier: 'standard'
+            },
+            {
+                label: '速達配送',
+                detail: '翌日お届け',
+                amount: '500',
+                identifier: 'express'
+            }
+        ],
+
+        // --- 3. 金額の内訳（小計・送料・合計など） ---
         total: {
-            label: shopNameVal, // 入力された店舗名をセット
+            label: shopNameVal,
             amount: amountVal
-        }
+        },
+        lineItems: [
+            {
+                label: '商品小計',
+                amount: (Number(amountVal) - 500 > 0 ? Number(amountVal) - 500 : amountVal).toString()
+            },
+            {
+                label: '送料（東京都）',
+                amount: '500'
+            }
+        ]
     };
 
     // バージョン3を指定してセッション開始
