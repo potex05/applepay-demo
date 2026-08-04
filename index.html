@@ -208,7 +208,8 @@ async function onApplePayButtonClicked() {
                 label: '通常配送',
                 detail: '3〜5日以内にお届け',
                 amount: '0',
-                identifier: 'standard'
+                identifier: 'standard',
+                selected: true
             },
             {
                 label: '速達配送',
@@ -248,6 +249,12 @@ async function onApplePayButtonClicked() {
         const shippingCost = Number(selectedMethod.amount);
         const totalAmount = baseAmount + shippingCost;
 
+        // 選択された配送方法の selected 状態を更新
+        const updatedShippingMethods = paymentRequest.shippingMethods.map(method => ({
+            ...method,
+            selected: method.identifier === selectedMethod.identifier
+        }));
+
         const update = {
             newTotal: {
                 label: shopNameVal,
@@ -266,16 +273,18 @@ async function onApplePayButtonClicked() {
                     type: 'final'
                 }
             ],
-            newShippingMethods: paymentRequest.shippingMethods
+            newShippingMethods: updatedShippingMethods
         };
 
         session.completeShippingMethodSelection(update);
     };
 
-    // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
+    // マーチャント認証イベント（デモ用にダミー完了処理を実行）
     session.onvalidatemerchant = async (event) => {
         console.log("Validation URL:", event.validationURL);
-        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...\n※フロントエンド単体のためここで停止します。";
+        statusDiv.innerText = "マーチャント認証（デモパス中）...";
+        // 本来はサーバーから取得した merchantSession オブジェクトを渡します
+        session.completeMerchantValidation({});
     };
 
     // ユーザー認証成功時
