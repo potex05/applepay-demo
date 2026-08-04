@@ -259,6 +259,34 @@ async function onApplePayButtonClicked() {
                     label: '送料',
                     amount: shippingCost.toString()
                 }
+            ],
+            total: {
+                label: shopNameVal,
+                amount: totalAmount.toString()
+            },
+            lineItems: [
+                {
+                    label: '商品小計',
+                    amount: baseAmount.toString()
+                },
+                {
+                    label: '送料',
+                    amount: shippingCost.toString()
+                }
+            ],
+            newShippingMethods: [
+                {
+                    label: '通常配送',
+                    detail: '3〜5日以内にお届け',
+                    amount: '0',
+                    identifier: 'standard'
+                },
+                {
+                    label: '速達配送',
+                    detail: '翌日お届け',
+                    amount: '500',
+                    identifier: 'express'
+                }
             ]
         };
 
