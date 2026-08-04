@@ -206,13 +206,13 @@ async function onApplePayButtonClicked() {
         
         // 請求先・配送先で要求するフィールド
         requiredBillingContactFields: ['postalAddress', 'name'],
-        requiredShippingContactFields: ['postalAddress', 'name', 'phone', 'email'],
+        requiredShippingContactFields: ['postalAddress', 'name'],
         
         // 配送方法の設定
         shippingType: 'shipping',
         shippingMethods: [
-            { label: '通常配送', amount: '500', detail: '3-5営業日でお届け', identifier: 'standard' },
-            { label: '速達配送', amount: '1000', detail: '翌日お届け', identifier: 'express' }
+            { label: '通常配送', amount: '0', detail: '3-5営業日でお届け', identifier: 'standard' },
+            { label: '速達配送', amount: '500', detail: '翌日お届け', identifier: 'express' }
         ],
         
         total: {
