@@ -233,12 +233,11 @@ async function onApplePayButtonClicked() {
 
     // 配送先が変更された時
     session.onshippingcontactselected = (event) => {
-        const status = ApplePaySession.STATUS_SUCCESS;
-        const newShippingMethods = paymentRequest.shippingMethods;
-        const newTotal = paymentRequest.total;
-        const newLineItems = paymentRequest.lineItems;
-        
-        session.completeShippingContactSelection(status, newShippingMethods, newTotal, newLineItems);
+        session.completeShippingContactSelection({
+            newShippingMethods: paymentRequest.shippingMethods,
+            newTotal: paymentRequest.total,
+            newLineItems: paymentRequest.lineItems
+        });
     };
 
     // 配送方法が変更された時
@@ -258,7 +257,10 @@ async function onApplePayButtonClicked() {
             type: 'final'
         };
         
-        session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, updatedTotal, updatedLineItems);
+        session.completeShippingMethodSelection({
+            newTotal: updatedTotal,
+            newLineItems: updatedLineItems
+        });
     };
 
     // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
