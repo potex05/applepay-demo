@@ -191,6 +191,15 @@ async function onApplePayButtonClicked() {
 
     statusDiv.innerText = "Apple Payを起動中...";
 
+    // 配送方法の定義
+    const shippingMethods = [
+        { label: '通常配送', amount: '0', detail: '3-5営業日でお届け', identifier: 'standard' },
+        { label: '速達配送', amount: '500', detail: '翌日お届け', identifier: 'express' }
+    ];
+
+    // 初期選択される配送オプションの金額を取得
+    const defaultShippingCost = Number(shippingMethods[0].amount);
+
     // ApplePaySession を使用したリクエストを作成
     const paymentRequest = {
         countryCode: 'JP',
@@ -201,7 +210,7 @@ async function onApplePayButtonClicked() {
         // 明細の内訳
         lineItems: [
             { label: '商品代金', amount: amountVal, type: 'final' },
-            { label: '配送料', amount: '500', type: 'final' }
+            { label: shippingMethods[0].label, amount: shippingMethods[0].amount, type: 'final' }
         ],
         
         // 請求先・配送先で要求するフィールド
@@ -210,14 +219,11 @@ async function onApplePayButtonClicked() {
         
         // 配送方法の設定
         shippingType: 'shipping',
-        shippingMethods: [
-            { label: '通常配送', amount: '0', detail: '3-5営業日でお届け', identifier: 'standard' },
-            { label: '速達配送', amount: '500', detail: '翌日お届け', identifier: 'express' }
-        ],
+        shippingMethods: shippingMethods,
         
         total: {
             label: shopNameVal, // 入力された店舗名をセット
-            amount: (Number(amountVal) + 500).toString(), // 商品代金 + 初期配送料
+            amount: (Number(amountVal) + defaultShippingCost).toString(), // 商品代金 + 初期選択の配送費
             type: 'final'
         }
     };
