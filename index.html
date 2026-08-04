@@ -147,7 +147,7 @@
     <!-- 決済情報入力セクション -->
     <div class="checkout-form">
         <label class="input-label" for="shop-name">支払先</label>
-        <input type="text" id="shop-name" class="text-input" placeholder="未設定">
+        <input type="text" id="shop-name" class="text-input" placeholder="オンラインショップ">
         
         <label class="input-label" for="amount">支払金額</label>
         <div class="amount-wrapper">
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function onApplePayButtonClicked() {
     const statusDiv = document.getElementById('status');
     const amountVal = document.getElementById('amount').value || '1000';
-    const shopNameVal = document.getElementById('shop-name').value || '未設定';
+    const shopNameVal = document.getElementById('shop-name').value || 'オンラインショップ';
 
     if (!amountVal || Number(amountVal) <= 0) {
         statusDiv.innerText = "有効な金額を入力してください。";
@@ -234,11 +234,6 @@ async function onApplePayButtonClicked() {
                 label: '送料',
                 amount: '0',
                 type: 'final'
-            },
-            {
-                label: shopNameVal,
-                amount: amountVal,
-                type: 'final'
             }
         ]
     };
@@ -269,13 +264,9 @@ async function onApplePayButtonClicked() {
                     label: '送料',
                     amount: shippingCost.toString(),
                     type: 'final'
-                },
-                {
-                    label: shopNameVal,
-                    amount: totalAmount.toString(),
-                    type: 'final'
                 }
-            ]
+            ],
+            newShippingMethods: paymentRequest.shippingMethods
         };
 
         session.completeShippingMethodSelection(update);
