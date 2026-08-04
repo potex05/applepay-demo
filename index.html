@@ -199,13 +199,13 @@ async function onApplePayButtonClicked() {
         merchantCapabilities: ['supports3DS'],
         
         // --- 1. ユーザーに要求する情報（画面項目が増えます） ---
-        requiredShippingContactFields: ['postalAddress', 'name', 'phone', 'email'],
+        requiredShippingContactFields: ['postalAddress', 'name'],
         requiredBillingContactFields: ['postalAddress', 'name'],
 
         // --- 2. 配送方法の選択肢を追加 ---
         shippingMethods: [
             {
-                label: '通常配送（ヤマト宅急便）',
+                label: '通常配送',
                 detail: '3〜5日以内にお届け',
                 amount: '0',
                 identifier: 'standard'
