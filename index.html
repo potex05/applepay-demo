@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Apple Pay Demo</title>
+<title>商品注文ページ - Apple Pay Demo</title>
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -11,43 +11,109 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        min-height: 100vh;
         margin: 0;
         background-color: #f5f5f7;
+        padding: 20px;
+        box-sizing: border-box;
     }
     .container {
         text-align: center;
         background: white;
-        padding: 30px;
+        padding: 40px 30px;
         border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         max-width: 400px;
-        width: 90%;
+        width: 100%;
+        box-sizing: border-box;
     }
     h1 {
-        font-size: 20px;
-        margin-bottom: 20px;
+        font-size: 22px;
+        margin-top: 0;
+        margin-bottom: 5px;
         color: #1d1d1f;
     }
-    .amount-input {
-        font-size: 28px;
-        font-weight: bold;
-        text-align: center;
-        border: none;
-        border-bottom: 2px solid #0071e3;
-        width: 80%;
-        margin-bottom: 30px;
-        outline: none;
-        padding: 5px;
+    .warning-text {
+        font-size: 12px;
+        color: #ff3b30;
+        margin-bottom: 25px;
     }
+    /* 商品情報風UIのスタイル */
+    .product-info {
+        background: #f9f9fb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
+    .product-image {
+        font-size: 60px;
+        margin-bottom: 10px;
+    }
+    .product-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1d1d1f;
+    }
+    /* フォーム周りのスタイル */
+    .checkout-form {
+        margin-bottom: 30px;
+        text-align: left;
+    }
+    .input-label {
+        display: block;
+        font-size: 13px;
+        color: #86868b;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+    .text-input, .amount-input {
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 18px;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 20px;
+        outline: none;
+        color: #1d1d1f;
+    }
+    .text-input:focus, .amount-input:focus {
+        border-color: #0071e3;
+    }
+    /* 金額入力エリアの特殊スタイル */
+    .amount-wrapper {
+        display: flex;
+        align-items: center;
+        border: 1px solid #d2d2d7;
+        border-radius: 8px;
+        padding-left: 15px;
+        margin-bottom: 20px;
+        transition: border-color 0.2s;
+    }
+    .amount-wrapper:focus-within {
+        border-color: #0071e3;
+    }
+    .amount-wrapper span {
+        font-size: 20px;
+        font-weight: bold;
+        color: #1d1d1f;
+    }
+    .amount-wrapper .amount-input {
+        border: none;
+        margin-bottom: 0;
+        padding-left: 10px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    /* Apple Pay公式スタイルのボタン (大型化) */
     .apple-pay-button {
         -webkit-appearance: -apple-pay-button;
         -apple-pay-button-type: check-out;
         -apple-pay-button-style: black;
         display: inline-block;
         width: 100%;
-        min-height: 48px;
-        border-radius: 4px;
+        min-height: 60px; /* ここを大きくしました */
+        border-radius: 8px; /* 丸みを少し強くしました */
         cursor: pointer;
     }
     .status {
@@ -55,23 +121,38 @@
         font-size: 14px;
         color: #86868b;
         min-height: 20px;
+        line-height: 1.5;
     }
 </style>
 </head>
 <body>
 <div class="container">
-<h1>Apple Pay Demo</h1>
-<p style="font-size: 12px; color: #ff3b30; margin-bottom: 10px;">※実際の請求は発生しません。</p>
-<div>
-<span style="font-size: 24px; font-weight: bold;">¥</span>
-<input type="number" id="amount" class="amount-input" value="1000" min="1">
-</div>
+    <h1>ご注文手続き</h1>
+    <p class="warning-text">※テスト環境のため、実際の請求は発生しません。</p>
 
-<!-- Apple Pay ボタン -->
-<div id="apple-pay-container">
-<button class="apple-pay-button" onclick="onApplePayButtonClicked()"></button>
-</div>
-<div id="status" class="status">金額を入力してボタンを押してください</div>
+    <!-- 商品情報セクション -->
+    <div class="product-info">
+        <div class="product-image">👟</div>
+        <div class="product-name">プレミアムスニーカー (デモ商品)</div>
+    </div>
+
+    <!-- 決済情報入力セクション -->
+    <div class="checkout-form">
+        <label class="input-label" for="shop-name">店舗名 (Apple Pay画面に表示されます)</label>
+        <input type="text" id="shop-name" class="text-input" value="デモオンラインショップ">
+        
+        <label class="input-label" for="amount">お支払い総額</label>
+        <div class="amount-wrapper">
+            <span>¥</span>
+            <input type="number" id="amount" class="amount-input" value="1000" min="1">
+        </div>
+    </div>
+
+    <!-- Apple Pay ボタン -->
+    <div id="apple-pay-container">
+        <button class="apple-pay-button" onclick="onApplePayButtonClicked()"></button>
+    </div>
+    <div id="status" class="status">内容をご確認の上、ボタンを押してください</div>
 </div>
 
 <script>
@@ -85,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. ApplePaySessionに対応しているか確認
     if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
-        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、Walletにカードが登録されていません。";
+        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、Walletに利用可能なクレジットカードが登録されていません。";
         document.getElementById('apple-pay-container').style.display = 'none';
     }
 });
@@ -93,6 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
 async function onApplePayButtonClicked() {
     const statusDiv = document.getElementById('status');
     const amountVal = document.getElementById('amount').value;
+    const shopNameVal = document.getElementById('shop-name').value || '未設定ショップ';
+
     if (!amountVal || amountVal <= 0) {
         statusDiv.innerText = "有効な金額を入力してください。";
         return;
@@ -107,7 +190,7 @@ async function onApplePayButtonClicked() {
         supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
         merchantCapabilities: ['supports3DS'],
         total: {
-            label: 'デモオンラインショップ',
+            label: shopNameVal, // 入力された店舗名をセット
             amount: amountVal
         }
     };
@@ -117,20 +200,15 @@ async function onApplePayButtonClicked() {
 
     // マーチャント認証イベント（本番ではサーバーサイド処理が必要）
     session.onvalidatemerchant = async (event) => {
-        /*
-          【注意】本来はここでサーバーに `event.validationURL` を送り、
-          Apple Merchant API と通信してマーチャントセッションを取得します。
-          フロントエンド単体（ダミー）ではここで失敗します。
-        */
         console.log("Validation URL:", event.validationURL);
-        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...";
+        statusDiv.innerText = "マーチャント認証中（要サーバー処理）...\n※フロントエンド単体のためここで停止します。";
     };
 
     // ユーザー認証成功時
     session.onpaymentauthorized = (event) => {
         // 決済処理結果を返す
         session.completePayment(ApplePaySession.STATUS_SUCCESS);
-        statusDiv.innerHTML = `<span style="color: #34c759; font-weight: bold;">決済デモ成功！</span><br>金額:¥${Number(amountVal).toLocaleString()}`;
+        statusDiv.innerHTML = `<span style="color: #34c759; font-weight: bold;">決済デモ成功！</span><br>店舗名: ${shopNameVal}<br>金額:¥${Number(amountVal).toLocaleString()}`;
     };
 
     // キャンセル時
