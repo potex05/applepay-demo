@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>商品注文ページ - Apple Pay Demo</title>
+<title>Apple Pay Demo</title>
 <style>
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -46,8 +46,11 @@
         margin-bottom: 25px;
     }
     .product-image {
-        font-size: 60px;
-        margin-bottom: 10px;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5px;
     }
     .product-name {
         font-size: 16px;
@@ -105,15 +108,15 @@
         font-size: 24px;
         font-weight: bold;
     }
-    /* Apple Pay公式スタイルのボタン (大型化) */
+    /* Apple Pay公式スタイルのボタン */
     .apple-pay-button {
         -webkit-appearance: -apple-pay-button;
         -apple-pay-button-type: check-out;
         -apple-pay-button-style: black;
         display: inline-block;
         width: 100%;
-        min-height: 60px; /* ここを大きくしました */
-        border-radius: 8px; /* 丸みを少し強くしました */
+        min-height: 60px;
+        border-radius: 8px;
         cursor: pointer;
     }
     .status {
@@ -128,18 +131,21 @@
 <body>
 <div class="container">
     <h1>ご注文手続き</h1>
-    <p class="warning-text">※テスト環境のため、実際の請求は発生しません。</p>
 
     <!-- 商品情報セクション -->
     <div class="product-info">
-        <div class="product-image">👟</div>
-        <div class="product-name">プレミアムスニーカー (デモ商品)</div>
+        <div class="product-image">
+            <svg data-slot="icon" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"></path>
+            </svg>
+        </div>
+        <div class="product-name">商品その１</div>
     </div>
 
     <!-- 決済情報入力セクション -->
     <div class="checkout-form">
-        <label class="input-label" for="shop-name">店舗名 (Apple Pay画面に表示されます)</label>
-        <input type="text" id="shop-name" class="text-input" value="デモオンラインショップ">
+        <label class="input-label" for="shop-name">店舗名</label>
+        <input type="text" id="shop-name" class="text-input" value="オンラインショップ">
         
         <label class="input-label" for="amount">お支払い総額</label>
         <div class="amount-wrapper">
@@ -166,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. ApplePaySessionに対応しているか確認
     if (!window.ApplePaySession || !ApplePaySession.canMakePayments()) {
-        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、Walletに利用可能なクレジットカードが登録されていません。";
+        document.getElementById('status').innerText = "お使いのブラウザ・端末はApple Pay決済に対応していないか、ご利用可能なお支払方法が登録されていません。";
         document.getElementById('apple-pay-container').style.display = 'none';
     }
 });
