@@ -147,12 +147,12 @@
     <!-- 決済情報入力セクション -->
     <div class="checkout-form">
         <label class="input-label" for="shop-name">支払先</label>
-        <input type="text" id="shop-name" class="text-input" value="オンラインショップ">
+        <input type="text" id="shop-name" class="text-input" placeholder="オンラインショップ">
         
         <label class="input-label" for="amount">支払金額</label>
         <div class="amount-wrapper">
             <span>¥</span>
-            <input type="number" id="amount" class="amount-input" value="1000" min="1">
+            <input type="number" id="amount" class="amount-input" placeholder="1000" min="1">
         </div>
     </div>
 
@@ -181,10 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function onApplePayButtonClicked() {
     const statusDiv = document.getElementById('status');
-    const amountVal = document.getElementById('amount').value;
+    const amountVal = document.getElementById('amount').value || '1000';
     const shopNameVal = document.getElementById('shop-name').value || '未設定';
 
-    if (!amountVal || amountVal <= 0) {
+    if (!amountVal || Number(amountVal) <= 0) {
         statusDiv.innerText = "有効な金額を入力してください。";
         return;
     }
@@ -198,11 +198,11 @@ async function onApplePayButtonClicked() {
         supportedNetworks: ['visa', 'masterCard', 'amex', 'jcb'],
         merchantCapabilities: ['supports3DS'],
         
-        // --- 1. ユーザーに要求する情報（画面項目が増えます） ---
+        // --- 1. ユーザーに要求する情報 ---
         requiredShippingContactFields: ['postalAddress', 'name'],
         requiredBillingContactFields: ['postalAddress', 'name'],
 
-        // --- 2. 配送方法の選択肢を追加 ---
+        // --- 2. 配送方法の選択肢 ---
         shippingMethods: [
             {
                 label: '通常配送',
@@ -218,7 +218,7 @@ async function onApplePayButtonClicked() {
             }
         ],
 
-        // --- 3. 金額の内訳（小計・送料・合計など） ---
+        // --- 3. 金額の内訳（小計・送料・合計） ---
         total: {
             label: shopNameVal,
             amount: amountVal,
@@ -234,6 +234,11 @@ async function onApplePayButtonClicked() {
                 label: '送料',
                 amount: '0',
                 type: 'final'
+            },
+            {
+                label: shopNameVal,
+                amount: amountVal,
+                type: 'final'
             }
         ]
     };
@@ -244,25 +249,30 @@ async function onApplePayButtonClicked() {
     // 配送方法変更時のイベントハンドラ
     session.onshippingmethodselected = (event) => {
         const selectedMethod = event.shippingMethod;
-        const baseAmount = parseFloat(amountVal);
-        const shippingCost = parseFloat(selectedMethod.amount);
+        const baseAmount = Number(amountVal);
+        const shippingCost = Number(selectedMethod.amount);
         const totalAmount = baseAmount + shippingCost;
 
         const update = {
             newTotal: {
                 label: shopNameVal,
-                amount: totalAmount.toFixed(0),
+                amount: totalAmount.toString(),
                 type: 'final'
             },
             newLineItems: [
                 {
                     label: '商品小計',
-                    amount: baseAmount.toFixed(0),
+                    amount: baseAmount.toString(),
                     type: 'final'
                 },
                 {
                     label: '送料',
-                    amount: shippingCost.toFixed(0),
+                    amount: shippingCost.toString(),
+                    type: 'final'
+                },
+                {
+                    label: shopNameVal,
+                    amount: totalAmount.toString(),
                     type: 'final'
                 }
             ]
